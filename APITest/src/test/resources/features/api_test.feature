@@ -8,14 +8,11 @@ Feature: Get the geolocalization information
     Given the user wants to get the geolocalization information
     When the user put the <longitude> and <latitude>
     Then the user gets the geolocalization information
-
-
+      | countryCode | timezoneId    | countryName |
+      | AO          | Africa/Luanda | Angola      |
     Examples:
       | latitude | longitude |
       | -10      | 20        |
-      | 45       | 77        |
-      | -90      | -180      |
-      | 0        | 0         |
 
 
   @NonHappyPath

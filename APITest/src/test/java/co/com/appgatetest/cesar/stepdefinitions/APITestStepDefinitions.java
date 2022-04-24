@@ -1,19 +1,32 @@
 package co.com.appgatetest.cesar.stepdefinitions;
 
+import co.com.appgatetest.cesar.models.Response;
+import co.com.appgatetest.cesar.questions.TheAnswer;
 import co.com.appgatetest.cesar.tasks.Connect;
 import co.com.appgatetest.cesar.tasks.Consume;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import java.util.Map;
 
-import static co.com.appgatetest.cesar.utils.Constants.ACTOR;
-import static co.com.appgatetest.cesar.utils.Constants.ENDPOINT;
-import static co.com.appgatetest.cesar.utils.Constants.SERVICE_NAME;
+import static co.com.appgatetest.cesar.utils.Constants.*;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
-import static org.hamcrest.Matchers.equalTo;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
+import static org.hamcrest.Matchers.equalTo;
 
 public class APITestStepDefinitions {
+
+
+    @DataTableType
+    public Response responseEntry(Map<String, String> entry) {
+        return new Response(
+                entry.get("countryCode"),
+                entry.get("timezoneId"),
+                entry.get("countryName")
+        );
+    }
+
 
     @Given("the user wants to get the geolocalization information")
     public void theUserWantsToGetTheGeolocalizationInformation() {
@@ -31,9 +44,12 @@ public class APITestStepDefinitions {
     }
 
     @Then("the user gets the geolocalization information")
-    public void theUserGetsTheGeolocalizationInformation() {
+    public void theUserGetsTheGeolocalizationInformation(Response expected) {
+        Response response = TheAnswer.is().answeredBy(ACTOR);
         ACTOR.should(
-
+                seeThat(COUNTRY_CODE_SUBJECT, ACTOR->response.getCountryCode(), equalTo(expected.getCountryCode())),
+                seeThat(TIME_ZONE_ID_SUBJECT, ACTOR->response.getTimezoneId(), equalTo(expected.getTimezoneId())),
+                seeThat(COUNTRY_NAME_SUBJECT, ACTOR->response.getCountryName(), equalTo(expected.getCountryName()))
         );
     }
 
@@ -47,8 +63,8 @@ public class APITestStepDefinitions {
     @Then("^the user do not gets the geolocalization information and show (.+)$")
     public void theUserDoNotGetsTheGeolocalizationInformationAndShow(String message) {
         ACTOR.should(
-                seeThatResponse("Message obtained: "+message, response -> response
-                        .statusCode(200)
+                seeThatResponse("Message obtained: " + message, response -> response
+                        .statusCode(STATUS_CODE_200)
                         .body("status.message", equalTo(message)))
         );
     }
