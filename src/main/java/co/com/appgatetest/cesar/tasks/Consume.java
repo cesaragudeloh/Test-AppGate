@@ -5,6 +5,8 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.rest.interactions.Get;
 
+import static co.com.appgatetest.cesar.utils.Constants.USERNAME;
+
 public class Consume implements Task
 {
 
@@ -25,7 +27,7 @@ public class Consume implements Task
                 Get.resource(service).with(
                         requestSpecification -> requestSpecification
                                 .param("formatted","true")
-                                .param("username","qa_mobile_easy")
+                                .param("username",USERNAME)
                                 .param("style","full")
                                 .param("lng", longitude)
                                 .param("lat", latitude)
